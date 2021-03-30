@@ -57,8 +57,8 @@ if __name__ == '__main__':
                     img = cv2.resize(
                         img, (int(0.8*args.height), int(0.8*args.width)), interpolation=cv2.INTER_CUBIC)
                 output = ''
-                img[img > 127] = 255
-                img[img <= 127] = 0
+                ret2, img = cv2.threshold(
+                    img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                 # WhatsApp: '      ' # Linux: '  '
                 new = np.where(img == 0, args.foreground_string,
                                args.background_string)
@@ -92,8 +92,8 @@ if __name__ == '__main__':
                     img = np.pad(
                         img, ((args.height-img.shape[0], 0), (args.width-img.shape[1], 0)), constant_values=((255, 255), (255, 255)))
 
-                img[img > 127] = 255
-                img[img <= 127] = 0
+                ret2, img = cv2.threshold(
+                    img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                 if output_arr is None:
                     output_arr = img
                 else:
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         img = cv2.resize(img, (args.width, args.height),
                          interpolation=cv2.INTER_CUBIC)
         ret2, img = cv2.threshold(
-            img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+            img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         new = np.where(img == 0, args.foreground_string,
                        args.background_string)
         output = ''
