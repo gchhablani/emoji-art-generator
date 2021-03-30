@@ -13,31 +13,31 @@ The help section of the `emoji_art.py`:
 ```bash
 $ python emoji_art.py -h
 usage: emoji_art.py [-h] -mode MODE -input INPUT [-height HEIGHT] [-width WIDTH]
-                    [-emoji1 EMOJI1] [-emoji2 EMOJI2] [-font_style FONT_STYLE]
-                    [--square_crop] [--multiple_lines]
+                    [-foreground_string FOREGROUND_STRING] [-background_string BACKGROUND_STRING]
+                    [-font_style FONT_STYLE] [--square_crop] [--multiple_lines]
 
 Generate an emoji art using text or image.
 
 optional arguments:
   -h, --help            show this help message and exit
   -mode MODE            The mode for generation: either `image` or `text`.
-  -input INPUT          The file path for `image` mode or the text for `text` mode. Text
-                        mode can also include emojis if available in generated data.
-  -height HEIGHT        The height of the image in 'character pixels' to be generated.
-                        In `text` mode this is for each character.
-  -width WIDTH          The width of the image in 'character pixels' to be generated. If
-                        not provided, the height is equal to the width. In `text` mode
+  -input INPUT          The file path for `image` mode or the text for `text` mode. Text mode can also
+                        include emojis if available in generated data.
+  -height HEIGHT        The height of the image in 'character pixels' to be generated. In `text` mode
                         this is for each character.
-  -emoji1 EMOJI1        The first emoji/string for the art.
-  -emoji2 EMOJI2        The second emoji/string for the art.
+  -width WIDTH          The width of the image in 'character pixels' to be generated. If not provided,
+                        the height is equal to the width. In `text` mode this is for each character.
+  -foreground_string FOREGROUND_STRING
+                        The foreground emoji/string for the art.
+  -background_string BACKGROUND_STRING
+                        The background emoji/string for the art.
   -font_style FONT_STYLE
-                        The font-family to be used while generation. Note that with
-                        cursive fonts, larger sizes are better.
-  --square_crop         Square crop the image in case the image is rectangular. Only
-                        used when mode is `image`. Cropping is done before generation.
-  --multiple_lines      Generate the text in multiple lines with each character in a new
-                        line. Only used when mode is `text`.
-
+                        The font-family to be used while generation. Note that with cursive fonts
+                        larger sizes are better.
+  --square_crop         Square crop the image in case the image is rectangular. Only used when mode is
+                        `image`. Cropping is done before generation.
+  --multiple_lines      Generate the text in multiple lines with each character in a new line. Only
+                        used when mode is `text`.
 ```
 
 Currently, `Monospace`, `Courier`, `AdreenaScript` and `StardustAdventure` font families are available. You can add you own and generate new fonts by running `generate.py`.
