@@ -66,7 +66,7 @@ $ python emoji_art.py -mode text -input "Hello Sir" -height 10 -font_style Monos
 
 ```
 
-**Muti-line Output**
+**Multi-line Output**
 
 ```bash
 $ python emoji_art.py -mode text -input "Hello Sir" -height 10 -font_style Monospace --multiple_lines
