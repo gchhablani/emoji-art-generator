@@ -22,10 +22,10 @@ if __name__ == '__main__':
         "-width", type=int, action="store", default=None, required=False, help="The width of the image in 'character pixels' to be generated. If not provided, the height is equal to the width. In `text` mode this is for each character."
     )
     parser.add_argument(
-        "-emoji1", type=str, action="store", default='🖤', help="The first emoji/string for the art."
+        "-foreground_string", type=str, action="store", default='🖤', help="The foreground emoji/string for the art."
     )
     parser.add_argument(
-        "-emoji2", type=str, action="store", default='🤍', help="The second emoji/string for the art."
+        "-background_string", type=str, action="store", default='🤍', help="The background emoji/string for the art."
     )
     parser.add_argument(
         "-font_style", type=str, action="store", default="Monospace", help="The font-family to be used while generation. Note that with cursive fonts larger sizes are better."
@@ -60,7 +60,8 @@ if __name__ == '__main__':
                 img[img > 127] = 255
                 img[img <= 127] = 0
                 # WhatsApp: '      ' # Linux: '  '
-                new = np.where(img == 0, args.emoji1, args.emoji2)
+                new = np.where(img == 0, args.foreground_string,
+                               args.background_string)
                 for row in new:
                     output += ''.join(row)+'\n'
                 print(output)
@@ -70,7 +71,7 @@ if __name__ == '__main__':
                 if char == ' ':
                     if output_arr is None:
                         output_arr = np.array(
-                            [257, ]*(args.width)*args.height).reshape(args.height, -1)
+                            [255, ]*(args.width)*args.height).reshape(args.height, -1)
                     else:
                         output_arr = np.concatenate((output_arr, np.array(
                             [255, ]*(args.width)*args.height).reshape(args.height, -1)), axis=1)
@@ -80,8 +81,7 @@ if __name__ == '__main__':
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 # print(char)
                 # print(args.font_style)
-                img[img > 127] = 255
-                img[img <= 127] = 0
+
                 if char.isupper():
                     img = cv2.resize(
                         img, (args.height, args.width), interpolation=cv2.INTER_CUBIC)
@@ -91,13 +91,17 @@ if __name__ == '__main__':
                     # print(img.shape)
                     img = np.pad(
                         img, ((args.height-img.shape[0], 0), (args.width-img.shape[1], 0)), constant_values=((255, 255), (255, 255)))
+
+                img[img > 127] = 255
+                img[img <= 127] = 0
                 if output_arr is None:
                     output_arr = img
                 else:
                     output_arr = np.concatenate((output_arr, img), axis=1)
             output = ''
             # WhatsApp: '      ' # Linux: '  '
-            new = np.where(output_arr == 0, args.emoji1, args.emoji2)
+            new = np.where(output_arr == 0, args.foreground_string,
+                           args.background_string)
             for row in new:
                 output += ''.join(row)+'\n'
             print(output)
@@ -117,7 +121,8 @@ if __name__ == '__main__':
                          interpolation=cv2.INTER_CUBIC)
         ret2, img = cv2.threshold(
             img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        new = np.where(img == 0, args.emoji1, args.emoji2)
+        new = np.where(img == 0, args.foreground_string,
+                       args.background_string)
         output = ''
         for row in new:
             output += ''.join(row)+'\n'
