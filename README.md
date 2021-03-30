@@ -39,7 +39,7 @@ optional arguments:
                         line. Only used when mode is `text`.
 
 ```
-Currently, `Monospace`, `Courier`, 'AdreenaScript` and `StardustAdventure` font families are available. You can add you own and generate new fonts by running `generate.py`.
+Currently, `Monospace`, `Courier`, `AdreenaScript` and `StardustAdventure` font families are available. You can add you own and generate new fonts by running `generate.py`.
 ### Generating New Fonts and Characters
 - In order to generate new fonts, you have to download the desired font's `.ttf` file and place it in the `generation/fonts` directory.
 
