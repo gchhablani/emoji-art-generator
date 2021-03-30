@@ -1,5 +1,5 @@
 # Emoji Art Generator
-This is a fun emoji art generator which I created because I was bored and wanted to relax for a while :P
+This is a fun emoji art generator which I created because I was stressed and wanted to relax for a while :P
 
 Please try not to misuse this. 
 
