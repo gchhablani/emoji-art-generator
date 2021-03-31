@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from imgaug import augmenters as iaa
 import os
+import string
 import matplotlib.pyplot as plt
 
 
@@ -64,8 +65,8 @@ def generate_images():
     ranges = []
     ranges = list(range(65, 91))
     ranges += list(range(97, 123))
-    extra_list = ["💩", "👻", "❤", "🤗", ".", ",", "?", ";", "1", "2", "3",
-                  "4", "5", "6", "7", "8", "9", "0"]  # add your characters here
+    extra_list = list(string.punctuation)+["💩", "👻", "❤", "🤗", "1", "2", "3",
+                                           "4", "5", "6", "7", "8", "9", "0"]  # add your characters here
     ranges += list(map(ord, extra_list))
 
     for i in ranges:

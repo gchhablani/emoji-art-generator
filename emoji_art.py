@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
-import math
+import string
 
 
 def is_emoji(s):
@@ -38,6 +38,18 @@ def generate_char(char, args):
         img = cv2.resize(
             img,
             (int(0.9 * args.height), int(0.9 * args.width)),
+            interpolation=cv2.INTER_CUBIC,
+        )
+
+        img = np.pad(
+            img,
+            ((args.height - img.shape[0], 0), (args.width - img.shape[1], 0)),
+            constant_values=((255, 255), (255, 255)),
+        )
+    elif char in string.punctuation:
+        img = cv2.resize(
+            img,
+            (int(0.5 * args.height), int(0.5 * args.width)),
             interpolation=cv2.INTER_CUBIC,
         )
 
