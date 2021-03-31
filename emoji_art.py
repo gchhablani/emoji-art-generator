@@ -3,6 +3,157 @@ import numpy as np
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 import string
+import math
+
+
+emojis = {
+    " o/": " 👋",
+    " </3": " 💔",
+    " <3": " ❤",
+    " 8-D": " 😁",
+    " 8D": " 😁",
+    " :-D": " 😁",
+    " =-3": " 😁",
+    " =-D": " 😁",
+    " =3": " 😁",
+    " =D": " 😁",
+    " B^D": " 😁",
+    " X-D": " 😁",
+    " XD": " 😁",
+    " x-D": " 😁",
+    " xD": " 😁",
+    " :')": " 😂",
+    " :'-)": " 😂",
+    " :-))": " 😃",
+    " 8)": " 😄",
+    " :)": " 😄",
+    " :-)": " 😄",
+    " :3": " 😄",
+    " :D": " 😄",
+    " :]": " 😄",
+    " :^)": " 😄",
+    " :c)": " 😄",
+    " :o)": " 😄",
+    " :}": " 😄",
+    " :っ)": " 😄",
+    " =)": " 😄",
+    " =]": " 😄",
+    " 0:)": " 😇",
+    " 0:-)": " 😇",
+    " 0:-3": " 😇",
+    " 0:3": " 😇",
+    " 0;^)": " 😇",
+    " O:-)": " 😇",
+    " 3:)": " 😈",
+    " 3:-)": " 😈",
+    " }:)": " 😈",
+    " }:-)": " 😈",
+    " *)": " 😉",
+    " *-)": " 😉",
+    " :-,": " 😉",
+    " ;)": " 😉",
+    " ;-)": " 😉",
+    " ;-]": " 😉",
+    " ;D": " 😉",
+    " ;]": " 😉",
+    " ;^)": " 😉",
+    " :-|": " 😐",
+    " :|": " 😐",
+    " :(": " 😒",
+    " :-(": " 😒",
+    " :-<": " 😒",
+    " :-[": " 😒",
+    " :-c": " 😒",
+    " :<": " 😒",
+    " :[": " 😒",
+    " :c": " 😒",
+    " :{": " 😒",
+    " :っC": "😒",
+    " %)": " 😖",
+    " %-)": " 😖",
+    " :-P": " 😜",
+    " :-b": " 😜",
+    " :-p": " 😜",
+    " :-Þ": " 😜",
+    " :-þ": " 😜",
+    " :P": " 😜",
+    " :b": " 😜",
+    " :p": " 😜",
+    " :Þ": " 😜",
+    " :þ": " 😜",
+    " ;(": " 😜",
+    " =p": " 😜",
+    " X-P": " 😜",
+    " XP": " 😜",
+    " d:": " 😜",
+    " x-p": " 😜",
+    " xp": " 😜",
+    " :-||": " 😠",
+    " :@": " 😠",
+    " :-.": " 😡",
+    " :-/": " 😡",
+    " :/": " 😡",
+    " :L": " 😡",
+    " :S": " 😡",
+    " :\\": " 😡",
+    " =/": " 😡",
+    " =L": " 😡",
+    " =\\": " 😡",
+    " :'(": " 😢",
+    " :'-(": " 😢",
+    " ^5": " 😤",
+    " ^<_<": " 😤",
+    " o/\\o": " 😤",
+    " |-O": " 😫",
+    " |;-)": " 😫",
+    " :###..": " 😰",
+    " :-###..": " 😰",
+    " D-':": " 😱",
+    " D8": " 😱",
+    " D:": " 😱",
+    " D:<": " 😱",
+    " D;": " 😱",
+    " D=": " 😱",
+    " DX": " 😱",
+    " v.v": " 😱",
+    " 8-0": " 😲",
+    " :-O": " 😲",
+    " :-o": " 😲",
+    " :O": " 😲",
+    " :o": " 😲",
+    " O-O": " 😲",
+    " O_O": " 😲",
+    " O_o": " 😲",
+    " o-o": " 😲",
+    " o_O": " 😲",
+    " o_o": " 😲",
+    " :$": " 😳",
+    " #-)": " 😵",
+    " :#": " 😶",
+    " :&": " 😶",
+    " :-#": " 😶",
+    " :-&": " 😶",
+    " :-X": " 😶",
+    " :X": " 😶",
+    " :-J": " 😼",
+    " :*": " 😽",
+    " :^*": " 😽",
+    " ಠ_ಠ": " 🙅",
+    " *\\0/*": " 🙆",
+    " \\o/": " 🙆",
+    " :>": " 😄",
+    " >.<": " 😡",
+    " >:(": " 😠",
+    " >:)": " 😈",
+    " >:-)": " 😈",
+    " >:/": " 😡",
+    " >:O": " 😲",
+    " >:P": " 😜",
+    " >:[": " 😒",
+    " >:\\": " 😡",
+    " >;)": " 😈",
+    " >_>^": " 😤",
+}
 
 
 def is_emoji(s):
@@ -28,53 +179,51 @@ def is_emoji(s):
     return False
 
 
+scale = {
+    "upper": 1,
+    "digit": 1,
+    "emoji": 0.9,
+    "punct": 0.9,
+    "other": 0.9
+}
+
+
+def get_char_type(char):
+    if char.isupper():
+        return "upper"
+    elif char.isdigit():
+        return "digit"
+    elif is_emoji(char):
+        return "emoji"
+    elif char in string.punctuation:
+        return "punct"
+    return "other"
+
+
 def generate_char(char, args):
     img = cv2.imread(f"data/{char}/{args.font_style}.png")
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    if char.isupper() or char.isdigit():
-        img = cv2.resize(img, (args.height, args.width),
-                         interpolation=cv2.INTER_CUBIC)
-    elif is_emoji(char):
-        img = cv2.resize(
-            img,
-            (int(0.9 * args.height), int(0.9 * args.width)),
-            interpolation=cv2.INTER_CUBIC,
-        )
-
-        img = np.pad(
-            img,
-            ((args.height - img.shape[0], 0), (args.width - img.shape[1], 0)),
-            constant_values=((255, 255), (255, 255)),
-        )
-    elif char in string.punctuation:
-        img = cv2.resize(
-            img,
-            (int(0.9 * args.height), int(0.9 * args.width)),
-            interpolation=cv2.INTER_CUBIC,
-        )
-
-        img = np.pad(
-            img,
-            ((args.height - img.shape[0], 0), (args.width - img.shape[1], 0)),
-            constant_values=((255, 255), (255, 255)),
-        )
-    else:
-        img = cv2.resize(
-            img,
-            (int(0.9 * args.height), int(0.9 * args.width)),
-            interpolation=cv2.INTER_CUBIC,
-        )
-
-        img = np.pad(
-            img,
-            ((args.height - img.shape[0], 0), (args.width - img.shape[1], 0)),
-            constant_values=((255, 255), (255, 255)),
-        )
-
+    typ = get_char_type(char)
+    scaling = scale[typ]
+    img = cv2.resize(img, (math.floor(scaling*args.width), math.floor(scaling*args.height)),
+                     interpolation=cv2.INTER_CUBIC)
+    if scaling != 1:
+        try:
+            img = np.pad(
+                img,
+                ((args.height - img.shape[0], 0),
+                 (args.width - img.shape[1], 0)),
+                constant_values=((255, 255), (255, 255)),
+            )
+        except Exception as e:
+            print(
+                f"Unable to pad with image shape: {img.shape}, args width: {args.width}, and args height: {args.height}.")
+            print(f"Exception Occurred: {e}")
     ret2, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     if args.no_output:
         plt.imshow(img)
         plt.show()
+
     return img
 
 
@@ -104,8 +253,9 @@ if __name__ == "__main__":
         "-height",
         type=int,
         action="store",
-        default=300,
-        help="The height of the image in 'character pixels' to be generated. In `text` mode this is for each character.",
+        default=None,
+        required=False,
+        help="The height of the image in 'character pixels' to be generated. If not provided, the height is equal to the width in `text` mode, and scaled according to width in `image` mode. If both not provided, width of 300 is used with respective height. In `text` mode this is for each character.",
     )
     parser.add_argument(
         "-width",
@@ -113,7 +263,7 @@ if __name__ == "__main__":
         action="store",
         default=None,
         required=False,
-        help="The width of the image in 'character pixels' to be generated. If not provided, the height is equal to the width. In `text` mode this is for each character.",
+        help="The width of the image in 'character pixels' to be generated. If not provided, the width is equal to the height in `text` mode, and scaled according to height in `image` mode. If both not provided, width of 300 is used with respective height. In `text` mode this is for each character.",
     )
     parser.add_argument(
         "-foreground_string",
@@ -140,8 +290,8 @@ if __name__ == "__main__":
         "-align_char",
         type=str,
         action="store",
-        default='',
-        help="Generate the rows with a character in the front to align them properly. Useful for sending over messenger apps which strip the initial space. Only used in `text` mode."
+        default="",
+        help="Generate the rows with a character in the front to align them properly. Useful for sending over messenger apps which strip the initial space. Only used in `text` mode.",
     )
 
     parser.add_argument(
@@ -163,13 +313,20 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.width is None:
-        args.width = args.height
+    if args.width is None and args.height is None:
+        args.width = 300
 
     if args.mode == "text":
+        if args.width is None:
+            args.width = args.height
+        elif args.height is None:
+            args.height = args.width
+
+        for key in emojis:
+            if key in args.input:
+                args.input = args.input.replace(key, emojis[key])
         if args.multiple_lines:
             for char in args.input:
-
                 if char == " ":
                     print("\n" * int(args.height))
                     continue
@@ -181,7 +338,7 @@ if __name__ == "__main__":
                 if not args.no_output:
                     output = ""
                     for row in new:
-                        output += args.align_char+"".join(row) + "\n"
+                        output += args.align_char + "".join(row) + "\n"
                     print(output)
         else:
             output_arr = None
@@ -224,22 +381,27 @@ if __name__ == "__main__":
             if not args.no_output:
                 output = ""
                 for row in new:
-                    output += args.align_char+"".join(row) + "\n"
+                    output += args.align_char + "".join(row) + "\n"
                 print(output)
 
     elif args.mode == "image":
         img = cv2.imread(args.input)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
+        print(img.shape)
+        if args.width is None:
+            args.width = int(args.height*img.shape[1]/img.shape[0])
+        elif args.height is None:
+            args.height = int(args.width*img.shape[0]/img.shape[1])
         if args.square_crop:
             w, h = img.shape
             if w > h:
                 img = img[w // 2 - h // 2: w // 2 + h // 2, :]
             else:
                 img = img[:, h // 2 - w // 2: h // 2 + w // 2]
-
-        img = cv2.resize(img, (args.width, args.height),
-                         interpolation=cv2.INTER_CUBIC)
+        print(args.height, args.width)
+        img = cv2.resize(
+            img, (args.width, args.height), interpolation=cv2.INTER_CUBIC
+        )
         ret2, img = cv2.threshold(
             img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         new = np.where(img == 0, args.foreground_string,
@@ -249,6 +411,9 @@ if __name__ == "__main__":
             for row in new:
                 output += "".join(row) + "\n"
             print(output)
+        else:
+            plt.imshow(img)
+            plt.show()
 
     else:
         raise NotImplementedError(
