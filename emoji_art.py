@@ -151,7 +151,7 @@ if __name__ == "__main__":
             for char in args.input:
 
                 if char == " ":
-                    print("\n" * 4)
+                    print("\n" * int(args.height//2))
                     continue
                 img = generate_char(char, args)
 
