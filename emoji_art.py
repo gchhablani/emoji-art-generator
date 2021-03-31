@@ -184,7 +184,8 @@ scale = {
     "upper": 1,
     "digit": 1,
     "emoji": 0.9,
-    "punct": 0.9,
+    "regular_punct": 0.9,
+    "small_punct": 0.6,
     "other": 0.9
 }
 
@@ -197,7 +198,10 @@ def get_char_type(char):
     elif is_emoji(char):
         return "emoji"
     elif char in string.punctuation:
-        return "punct"
+        if char not in ",.;":
+            return "regular_punct"
+        else:
+            return "small_punct"
     return "other"
 
 
@@ -213,7 +217,7 @@ def generate_char(char, args):
             img = np.pad(
                 img,
                 ((args.height - img.shape[0], 0),
-                 (args.width - img.shape[1], 0)),
+                 (0, args.width - img.shape[1])),
                 constant_values=((255, 255), (255, 255)),
             )
         except Exception as e:
