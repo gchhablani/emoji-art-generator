@@ -175,8 +175,8 @@ The help section of the `emoji_art.py`:
 $ python emoji_art.py -h
 usage: emoji_art.py [-h] -mode MODE -input INPUT [-height HEIGHT] [-width WIDTH]
                     [-foreground_string FOREGROUND_STRING] [-background_string BACKGROUND_STRING]
-                    [-font_style FONT_STYLE] [-align_char ALIGN_CHAR] [--square_crop]
-                    [--multiple_lines] [--no_output]
+                    [-font_style FONT_STYLE] [-align_char ALIGN_CHAR] [-emoji_thresh EMOJI_THRESH]
+                    [--square_crop] [--multiple_lines] [--no_output]
 
 Generate an emoji art using text or image.
 
@@ -185,10 +185,14 @@ optional arguments:
   -mode MODE            The mode for generation: either `image` or `text`.
   -input INPUT          The file path for `image` mode or the text for `text` mode. Text mode can also
                         include emojis if available in generated data.
-  -height HEIGHT        The height of the image in 'character pixels' to be generated. In `text` mode
-                        this is for each character.
+  -height HEIGHT        The height of the image in 'character pixels' to be generated. If not provided,
+                        the height is equal to the width in `text` mode, and scaled according to width
+                        in `image` mode. If both not provided, width of 300 is used with respective
+                        height. In `text` mode this is for each character.
   -width WIDTH          The width of the image in 'character pixels' to be generated. If not provided,
-                        the height is equal to the width. In `text` mode this is for each character.
+                        the width is equal to the height in `text` mode, and scaled according to height
+                        in `image` mode. If both not provided, width of 300 is used with respective
+                        height. In `text` mode this is for each character.
   -foreground_string FOREGROUND_STRING
                         The foreground emoji/string for the art.
   -background_string BACKGROUND_STRING
@@ -200,12 +204,16 @@ optional arguments:
                         Generate the rows with a character in the front to align them properly. Useful
                         for sending over messenger apps which strip the initial space. Only used in
                         `text` mode.
+  -emoji_thresh EMOJI_THRESH
+                        The emoji threshold used for emojis. Only used in `text` mode. If negative,
+                        then Otsu binarization is used.
   --square_crop         Square crop the image in case the image is rectangular. Only used when mode is
                         `image`. Cropping is done before generation.
   --multiple_lines      Generate the text in multiple lines with each character in a new line. Only
                         used when mode is `text`.
   --no_output           If the output is not to be printed, and only binarized image is to be shown.
                         This is only useful for testing.
+
 ```
 
 Currently, `Monospace`, `Courier`, `AdreenaScript` and `StardustAdventure` font families are available. You can add you own and generate new fonts by running `generate.py`.
