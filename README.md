@@ -158,6 +158,7 @@ $ python emoji_art.py -mode text -input "Hello Sir" -height 10 -font_style Monos
 🤍🤍🤍🤍🤍🤍🤍🤍
 ```
 **Single-Line Emoji Output**
+
 A giant HuggingFace Emoji made out of HuggingFace Emojis:
 
 ```bash
@@ -271,6 +272,7 @@ $ python emoji_art.py -mode text -input 🤗 -foreground_string 🤗 -background
 **Image Example Output**
 
 Original Image:
+
 ![monkey sticker](./sample_images/monkey.webp)
 
 ```bash
