@@ -42,6 +42,9 @@ optional arguments:
 
 Currently, `Monospace`, `Courier`, `AdreenaScript` and `StardustAdventure` font families are available. You can add you own and generate new fonts by running `generate.py`.
 ### Generating New Fonts and Characters
+
+Change your working directory to `generate`.
+
 - In order to generate new fonts, you have to download the desired font's `.ttf` file and place it in the `generation/fonts` directory.
 
 - In order to generate new characters, manually place them in `generation/generate.py` in the `extra_list`.
