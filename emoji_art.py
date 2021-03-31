@@ -32,7 +32,8 @@ def generate_char(char, args):
     img = cv2.imread(f"data/{char}/{args.font_style}.png")
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     if char.isupper():
-        img = cv2.resize(img, (args.height, args.width), interpolation=cv2.INTER_CUBIC)
+        img = cv2.resize(img, (args.height, args.width),
+                         interpolation=cv2.INTER_CUBIC)
     elif is_emoji(char):
         img = cv2.resize(
             img,
@@ -48,7 +49,7 @@ def generate_char(char, args):
     else:
         img = cv2.resize(
             img,
-            (int(0.8 * args.height), int(0.8 * args.width)),
+            (int(0.9 * args.height), int(0.9 * args.width)),
             interpolation=cv2.INTER_CUBIC,
         )
 
@@ -154,7 +155,8 @@ if __name__ == "__main__":
                     continue
                 img = generate_char(char, args)
 
-                new = np.where(img == 0, args.foreground_string, args.background_string)
+                new = np.where(img == 0, args.foreground_string,
+                               args.background_string)
 
                 if not args.no_output:
                     output = ""
@@ -212,13 +214,16 @@ if __name__ == "__main__":
         if args.square_crop:
             w, h = img.shape
             if w > h:
-                img = img[w // 2 - h // 2 : w // 2 + h // 2, :]
+                img = img[w // 2 - h // 2: w // 2 + h // 2, :]
             else:
-                img = img[:, h // 2 - w // 2 : h // 2 + w // 2]
+                img = img[:, h // 2 - w // 2: h // 2 + w // 2]
 
-        img = cv2.resize(img, (args.width, args.height), interpolation=cv2.INTER_CUBIC)
-        ret2, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        new = np.where(img == 0, args.foreground_string, args.background_string)
+        img = cv2.resize(img, (args.width, args.height),
+                         interpolation=cv2.INTER_CUBIC)
+        ret2, img = cv2.threshold(
+            img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        new = np.where(img == 0, args.foreground_string,
+                       args.background_string)
         if not args.no_output:
             output = ""
             for row in new:
