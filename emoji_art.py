@@ -49,7 +49,7 @@ def generate_char(char, args):
     elif char in string.punctuation:
         img = cv2.resize(
             img,
-            (int(0.5 * args.height), int(0.5 * args.width)),
+            (int(0.9 * args.height), int(0.9 * args.width)),
             interpolation=cv2.INTER_CUBIC,
         )
 
