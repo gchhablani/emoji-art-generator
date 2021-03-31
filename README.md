@@ -8,7 +8,7 @@ The current code supports images and text input. I'm open to new suggestions so 
 
 **Tips**:
 
-- If you are using emojis over WhatsApp, each emoji corresponds to five spaces, i.e. if you want to send this over WhatsApp, and you want to use space as foreground and emoji as background or vice-versa, use five spaces.
+- If you are using emojis over WhatsApp, each emoji corresponds to five spaces on browser, i.e. if you want to send this over WhatsApp, and you want to use space as foreground and emoji as background or vice-versa, use five spaces. On phones, it corresponds to 6 spaces, generally. It also depends on the font.
 
 - If you are using text over WhatsApp, each text corresponds to two spaces, i.e. if you want to send this over WhatsApp, and you want to use space as foreground and some text as background or vice-versa, use two spaces.
 
