@@ -31,7 +31,7 @@ def is_emoji(s):
 def generate_char(char, args):
     img = cv2.imread(f"data/{char}/{args.font_style}.png")
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    if char.isupper():
+    if char.isupper() or char.isdigit():
         img = cv2.resize(img, (args.height, args.width),
                          interpolation=cv2.INTER_CUBIC)
     elif is_emoji(char):
@@ -125,6 +125,14 @@ if __name__ == "__main__":
         help="The font-family to be used while generation. Note that with cursive fonts larger sizes are better.",
     )
     parser.add_argument(
+        "-align_char",
+        type=str,
+        action="store",
+        default='',
+        help="Generate the rows with a character in the front to align them properly. Useful for sending over messenger apps which strip the initial space. Only used in `text` mode."
+    )
+
+    parser.add_argument(
         "--square_crop",
         action="store_true",
         help="Square crop the image in case the image is rectangular. Only used when mode is `image`. Cropping is done before generation.",
@@ -161,7 +169,7 @@ if __name__ == "__main__":
                 if not args.no_output:
                     output = ""
                     for row in new:
-                        output += "".join(row) + "\n"
+                        output += args.align_char+"".join(row) + "\n"
                     print(output)
         else:
             output_arr = None
@@ -204,7 +212,7 @@ if __name__ == "__main__":
             if not args.no_output:
                 output = ""
                 for row in new:
-                    output += "".join(row) + "\n"
+                    output += args.align_char+"".join(row) + "\n"
                 print(output)
 
     elif args.mode == "image":

@@ -25,7 +25,8 @@ The help section of the `emoji_art.py`:
 $ python emoji_art.py -h
 usage: emoji_art.py [-h] -mode MODE -input INPUT [-height HEIGHT] [-width WIDTH]
                     [-foreground_string FOREGROUND_STRING] [-background_string BACKGROUND_STRING]
-                    [-font_style FONT_STYLE] [--square_crop] [--multiple_lines] [--no_output]
+                    [-font_style FONT_STYLE] [-align_char ALIGN_CHAR] [--square_crop]
+                    [--multiple_lines] [--no_output]
 
 Generate an emoji art using text or image.
 
@@ -45,6 +46,10 @@ optional arguments:
   -font_style FONT_STYLE
                         The font-family to be used while generation. Note that with cursive fonts
                         larger sizes are better.
+  -align_char ALIGN_CHAR
+                        Generate the rows with a character in the front to align them properly. Useful
+                        for sending over messenger apps which strip the initial space. Only used in
+                        `text` mode.
   --square_crop         Square crop the image in case the image is rectangular. Only used when mode is
                         `image`. Cropping is done before generation.
   --multiple_lines      Generate the text in multiple lines with each character in a new line. Only
