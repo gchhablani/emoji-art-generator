@@ -1,3 +1,4 @@
+from sys import int_info
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -219,7 +220,16 @@ def generate_char(char, args):
             print(
                 f"Unable to pad with image shape: {img.shape}, args width: {args.width}, and args height: {args.height}.")
             print(f"Exception Occurred: {e}")
-    ret2, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    if typ == "emoji":
+        if args.emoji_thresh is not None and args.emoji_thresh >= 0:
+            img[img >= args.hard_thresh] = 255
+            img[img < args.hard_thresh] = 0
+        else:
+            ret2, img = cv2.threshold(
+                img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    else:
+        ret2, img = cv2.threshold(
+            img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     if args.no_output:
         plt.imshow(img)
         plt.show()
@@ -292,6 +302,14 @@ if __name__ == "__main__":
         action="store",
         default="",
         help="Generate the rows with a character in the front to align them properly. Useful for sending over messenger apps which strip the initial space. Only used in `text` mode.",
+    )
+
+    parser.add_argument(
+        "-emoji_thresh",
+        type=int,
+        action="store",
+        default=-1,
+        help="The emoji threshold used for emojis. Only used in `text` mode. If negative, then Otsu binarization is used.",
     )
 
     parser.add_argument(
@@ -387,7 +405,6 @@ if __name__ == "__main__":
     elif args.mode == "image":
         img = cv2.imread(args.input)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        print(img.shape)
         if args.width is None:
             args.width = int(args.height*img.shape[1]/img.shape[0])
         elif args.height is None:
@@ -398,7 +415,6 @@ if __name__ == "__main__":
                 img = img[w // 2 - h // 2: w // 2 + h // 2, :]
             else:
                 img = img[:, h // 2 - w // 2: h // 2 + w // 2]
-        print(args.height, args.width)
         img = cv2.resize(
             img, (args.width, args.height), interpolation=cv2.INTER_CUBIC
         )
