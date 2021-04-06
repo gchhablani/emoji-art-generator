@@ -1,16 +1,12 @@
 import json
 import os
-from io import BytesIO  # python 3
-from sys import getsizeof
 
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from PIL import Image
 from selenium import webdriver
 from tqdm.auto import tqdm
-from wcwidth import wcswidth
 
 
 def remove_color(img, rgba):

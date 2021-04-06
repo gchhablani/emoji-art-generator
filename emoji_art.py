@@ -1,45 +1,22 @@
+import json
 import math
 import os
 import string
 import time
 from argparse import ArgumentParser
-from sys import int_info
-from types import new_class
 
 import cv2
-import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.spatial import KDTree
 from selenium import webdriver
-
-#
-# https: // stackoverflow.com/questions/41721734/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
 from selenium.webdriver.chrome.options import Options
 from skimage.segmentation import slic
 from tqdm.auto import tqdm
 
-# def test_fullpage_screenshot(self):
-#     chrome_options = Options()
-#     chrome_options.add_argument('--headless')
-#     chrome_options.add_argument('--start-maximized')
-#     driver = webdriver.Chrome(chrome_options=chrome_options)
-#     driver.get("yoururlxxx")
-#     time.sleep(2)
 
-#     # the element with longest height on page
-#     ele = driver.find_element(
-#         "xpath", '//div[@class="react-grid-layout layout"]')
-#     total_height = ele.size["height"]+1000
-
-#     driver.set_window_size(1920, total_height)  # the trick
-#     time.sleep(2)
-#     driver.save_screenshot("screenshot1.png")
-#     driver.quit()
-
-
-def generate_html_around_str(strin):
+def generate_html_around_str(strin, save_path):
     font_face = ""
     a = "@font-face { font-family: '0'; src: url('./generation/fonts/Monospace.ttf')} "
 
@@ -52,7 +29,7 @@ def generate_html_around_str(strin):
         + ">"
     )
 
-    f = open("out.html", "w")
+    f = open(save_path, "w")
     select_font = "* {font-family: '0'}"
     text = start_html + font_face + select_font + mid_html + strin + end_html
     f.write(text)
@@ -152,293 +129,6 @@ def get_super_pixels(image, n_segments):
     return oo
 
 
-with open("generation/emojis.json") as f:
-    emojis = json.load(f)
-
-choose_list_with_html = {emoji["emoji"]: fix_html_emojis(emoji["html"])
-                         for emoji in emojis["emojis"] if ("flag" not in emoji["category"] and "geometric" not in emoji["category"])}
-
-choose_list = list(choose_list_with_html.keys())
-ignore_emoji_list = [
-    "▪",
-    "▪️",
-    "♦",
-    "▫️",
-    "♠️",
-    "®️",
-    "🔹",
-    "↕️",
-    "↔",
-    "☺",
-    "◽",
-    "♣️",
-    "♀",
-    "♥",
-    "♀️",
-    "↕",
-    "☀",
-    "♎",
-    "⚒",
-    "⬇️",
-    "✖",
-    "⬆️",
-    "♍",
-    "⚱",
-    "☂",
-    "⁉️",
-    "✝",
-    "‼",
-    "❣️",
-    "☔",
-    "↘️",
-    "↩",
-    "⚔",
-    "◻️",
-    "✴️",
-    "✒️",
-    "✌",
-    "♟",
-    "❣",
-    "☘️",
-    "✉️",
-    "✈",
-    "✳",
-    "⚓",
-    "❤️",
-    "☁",
-    "♻️",
-    "✂",
-    "™️",
-    "✈️",
-    "♥️",
-    "♣",
-    "✉",
-    "✝️",
-    "☦",
-    "⚙️",
-    "®",
-    "♏",
-    "☘",
-    "™",
-    "♦️",
-    "⚗",
-    "↙️",
-    "©️",
-    "⚕",
-    "♊",
-    "❄",
-    "☹️",
-    "☮️",
-    "♈",
-    "⌨",
-    "☃️",
-    "⚛️",
-    "♾️",
-    "☑",
-    "⚒️",
-    "⬅️",
-    "♐",
-    "⬆",
-    "☃",
-    "✡",
-    "♨",
-    "♓",
-    "⬇",
-    "↘",
-    "☯️",
-    "☑️",
-    "♨️",
-    "☸",
-    "◼",
-    "⏏️",
-    "⚰️",
-    "♑",
-    "♂️",
-    "©",
-    "◀️",
-    "♻",
-    "☦️",
-    "‼️",
-    "☺️",
-    "✌️",
-    "✴",
-    "⚕️",
-    "❇️",
-    "↔️",
-    "▫",
-    "✒",
-    "#",
-    "◾",
-    "✍",
-    "♟️",
-    "☎️",
-    "⏏",
-    "☂️",
-    "⚖️",
-    "♠",
-    "🏿",
-    "🏾",
-    "🏽",
-    "🏼",
-    "🏻",
-
-]
-
-# chrome_ignore_emoji_list = ['▪', '▪️', '♦', '▫️', '♠️', '®️', '🔹', '↕️', '↔', '☺', '◽', '♣️', '♀', '♥', '♀️', '↕', '‼', '◻️',
-#                      '™️', '♥️', '♣', '®', '™', '♦️', '©️', '♂️', '©', '‼️', '☺️', '↔️', '▫', '#', '◾', '♠', '🏿', '🏾', '🏽', '🏼', '🏻',
-#                      ]
-
-
-emojis = {
-    " o/": " 👋",
-    " </3": " 💔",
-    " <3": " ❤",
-    " 8-D": " 😁",
-    " 8D": " 😁",
-    " :-D": " 😁",
-    " =-3": " 😁",
-    " =-D": " 😁",
-    " =3": " 😁",
-    " =D": " 😁",
-    " B^D": " 😁",
-    " X-D": " 😁",
-    " XD": " 😁",
-    " x-D": " 😁",
-    " xD": " 😁",
-    " :')": " 😂",
-    " :'-)": " 😂",
-    " :-))": " 😃",
-    " 8)": " 😄",
-    " :)": " 😄",
-    " :-)": " 😄",
-    " :3": " 😄",
-    " :D": " 😄",
-    " :]": " 😄",
-    " :^)": " 😄",
-    " :c)": " 😄",
-    " :o)": " 😄",
-    " :}": " 😄",
-    " :っ)": " 😄",
-    " =)": " 😄",
-    " =]": " 😄",
-    " 0:)": " 😇",
-    " 0:-)": " 😇",
-    " 0:-3": " 😇",
-    " 0:3": " 😇",
-    " 0;^)": " 😇",
-    " O:-)": " 😇",
-    " 3:)": " 😈",
-    " 3:-)": " 😈",
-    " }:)": " 😈",
-    " }:-)": " 😈",
-    " *)": " 😉",
-    " *-)": " 😉",
-    " :-,": " 😉",
-    " ;)": " 😉",
-    " ;-)": " 😉",
-    " ;-]": " 😉",
-    " ;D": " 😉",
-    " ;]": " 😉",
-    " ;^)": " 😉",
-    " :-|": " 😐",
-    " :|": " 😐",
-    " :(": " 😒",
-    " :-(": " 😒",
-    " :-<": " 😒",
-    " :-[": " 😒",
-    " :-c": " 😒",
-    " :<": " 😒",
-    " :[": " 😒",
-    " :c": " 😒",
-    " :{": " 😒",
-    " :っC": "😒",
-    " %)": " 😖",
-    " %-)": " 😖",
-    " :-P": " 😜",
-    " :-b": " 😜",
-    " :-p": " 😜",
-    " :-Þ": " 😜",
-    " :-þ": " 😜",
-    " :P": " 😜",
-    " :b": " 😜",
-    " :p": " 😜",
-    " :Þ": " 😜",
-    " :þ": " 😜",
-    " ;(": " 😜",
-    " =p": " 😜",
-    " X-P": " 😜",
-    " XP": " 😜",
-    " d:": " 😜",
-    " x-p": " 😜",
-    " xp": " 😜",
-    " :-||": " 😠",
-    " :@": " 😠",
-    " :-.": " 😡",
-    " :-/": " 😡",
-    " :/": " 😡",
-    " :L": " 😡",
-    " :S": " 😡",
-    " :\\": " 😡",
-    " =/": " 😡",
-    " =L": " 😡",
-    " =\\": " 😡",
-    " :'(": " 😢",
-    " :'-(": " 😢",
-    " ^5": " 😤",
-    " ^<_<": " 😤",
-    " o/\\o": " 😤",
-    " |-O": " 😫",
-    " |;-)": " 😫",
-    " :###..": " 😰",
-    " :-###..": " 😰",
-    " D-':": " 😱",
-    " D8": " 😱",
-    " D:": " 😱",
-    " D:<": " 😱",
-    " D;": " 😱",
-    " D=": " 😱",
-    " DX": " 😱",
-    " v.v": " 😱",
-    " 8-0": " 😲",
-    " :-O": " 😲",
-    " :-o": " 😲",
-    " :O": " 😲",
-    " :o": " 😲",
-    " O-O": " 😲",
-    " O_O": " 😲",
-    " O_o": " 😲",
-    " o-o": " 😲",
-    " o_O": " 😲",
-    " o_o": " 😲",
-    " :$": " 😳",
-    " #-)": " 😵",
-    " :#": " 😶",
-    " :&": " 😶",
-    " :-#": " 😶",
-    " :-&": " 😶",
-    " :-X": " 😶",
-    " :X": " 😶",
-    " :-J": " 😼",
-    " :*": " 😽",
-    " :^*": " 😽",
-    " ಠ_ಠ": " 🙅",
-    " *\\0/*": " 🙆",
-    " \\o/": " 🙆",
-    " :>": " 😄",
-    " >.<": " 😡",
-    " >:(": " 😠",
-    " >:)": " 😈",
-    " >:-)": " 😈",
-    " >:/": " 😡",
-    " >:O": " 😲",
-    " >:P": " 😜",
-    " >:[": " 😒",
-    " >:\\": " 😡",
-    " >;)": " 😈",
-    " >_>^": " 😤",
-}
-
-
 def is_emoji(s):
     range_min = ord("\U0001F300")  # 127744
     range_max = ord("\U0001FAD6")  # 129750
@@ -512,8 +202,8 @@ def generate_char(char, args):
             print(f"Exception Occurred: {e}")
     if typ == "emoji":
         if args.emoji_thresh is not None and args.emoji_thresh >= 0:
-            img[img >= args.hard_thresh] = 255
-            img[img < args.hard_thresh] = 0
+            img[img >= args.emoji_thresh] = 255
+            img[img < args.emoji_thresh] = 0
         else:
             ret2, img = cv2.threshold(
                 img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -606,7 +296,26 @@ if __name__ == "__main__":
         type=int,
         action="store",
         default=0,
-        help="The number of segments (approx) to be created if using super-pixels. Only used with `image` mode in `auto_color` setting.",
+        help="The number of segments (approx) to be created if using super-pixels. Only used with `image` mode. With `auto_color` setting, the superpixels are used to generate the emoji art.",
+    )
+    parser.add_argument(
+        "-system",
+        type=str,
+        action="store",
+        default="linux",
+        help="The system to be used. Emojis render differently on systems. Currently only chrome browser is support for `linux` and `mac` systems.",
+    )
+    parser.add_argument(
+        "-save_path",
+        type=str,
+        action="store",
+        default=None,
+        help="The parth where the output is to be saved, if needed. By default, the output is printed to the standard output.",
+    )
+    parser.add_argument(
+        "--html",
+        action="store_true",
+        help="If the output rows are to be separated using the `<br>` tag.",
     )
     parser.add_argument(
         "--auto_color",
@@ -628,7 +337,6 @@ if __name__ == "__main__":
         action="store_true",
         help="Generate the text in multiple lines with each character in a new line. Only used when mode is `text`.",
     )
-
     parser.add_argument(
         "--no_output",
         action="store_true",
@@ -636,7 +344,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    new_line_str = "<br>"
+    new_line_str = "<br>" if args.html else "\n"
 
     if args.width is None and args.height is None:
         args.width = 300
@@ -646,14 +354,16 @@ if __name__ == "__main__":
             args.width = args.height
         elif args.height is None:
             args.height = args.width
-
-        for key in emojis:
+        with open("setup/text_to_emoji_map.json") as f:
+            emoji_mapping = json.load(f)
+        for key in emoji_mapping:
             if key in args.input:
-                args.input = args.input.replace(key, emojis[key])
+                args.input = args.input.replace(key, emoji_mapping[key])
         if args.multiple_lines:
+            lines = []
             for char in args.input:
                 if char == " ":
-                    print(new_line_str * int(args.height))
+                    lines.append(new_line_str * int(args.height))
                     continue
                 img = generate_char(char, args)
 
@@ -664,7 +374,12 @@ if __name__ == "__main__":
                     output = ""
                     for row in new:
                         output += args.align_char + "".join(row) + new_line_str
-                    print(output)
+                    lines.append(output)
+            if args.save_path is None:
+                print("".join(lines))
+            else:
+                with open(args.save_path, "w") as f:
+                    f.write("".join(lines))
         else:
             output_arr = None
             for char in args.input:
@@ -707,22 +422,31 @@ if __name__ == "__main__":
                 output = ""
                 for row in new:
                     output += args.align_char + "".join(row) + new_line_str
-                print(output)
+                if args.save_path is None:
+                    print(output)
+                else:
+                    with open(args.save_path, "w") as f:
+                        f.write(output)
+            else:
+                raise NotImplementedError(
+                    "No output mode is not supported for `text` mode."
+                )
 
     elif args.mode == "image":
         img = cv2.imread(args.input)
         if not args.auto_color and not args.n_segments > 0:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            if args.width is None:
-                args.width = int(args.height * img.shape[1] / img.shape[0])
-            elif args.height is None:
-                args.height = int(args.width * img.shape[0] / img.shape[1])
             if args.square_crop:
                 w, h = img.shape
                 if w > h:
                     img = img[w // 2 - h // 2: w // 2 + h // 2, :]
                 else:
                     img = img[:, h // 2 - w // 2: h // 2 + w // 2]
+            if args.width is None:
+                args.width = int(args.height * img.shape[1] / img.shape[0])
+            elif args.height is None:
+                args.height = int(args.width * img.shape[0] / img.shape[1])
+
             img = cv2.resize(
                 img, (args.width, args.height), interpolation=cv2.INTER_CUBIC
             )
@@ -734,47 +458,89 @@ if __name__ == "__main__":
                 output = ""
                 for row in new:
                     output += "".join(row) + new_line_str
-                print(output)
+                if args.save_path is None:
+                    print(output)
+                else:
+                    with open(args.save_path, "w") as f:
+                        f.write(output)
             else:
                 plt.imshow(img)
                 plt.show()
         elif not args.auto_color and args.n_segments > 0:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            img = get_super_pixels(img, args.n_segments)
-            plt.imsave("superpixels.png", img, dpi=10000)
-        else:
+            if args.square_crop:
+                w, h = img.shape
+                if w > h:
+                    img = img[w // 2 - h // 2: w // 2 + h // 2, :]
+                else:
+                    img = img[:, h // 2 - w // 2: h // 2 + w // 2]
             if args.width is None:
                 args.width = int(args.height * img.shape[1] / img.shape[0])
             elif args.height is None:
                 args.height = int(args.width * img.shape[0] / img.shape[1])
+
+            img = cv2.resize(
+                img, (args.width, args.height), interpolation=cv2.INTER_CUBIC
+            )
+            img = get_super_pixels(img, args.n_segments)
+            if args.no_output:
+                plt.imshow(img)
+                plt.show()
+            # Since superpixels are an image, they aren't rendered and directly saved.
+            else:
+                plt.imsave(
+                    "superpixels.png" if args.save_path is not None else args.save_path,
+                    img,
+                    dpi=10000,
+                )
+        else:
             if args.square_crop:
-                # print(img.shape)
                 w, h, _ = img.shape
                 if w > h:
                     img = img[w // 2 - h // 2: w // 2 + h // 2, :]
                 else:
                     img = img[:, h // 2 - w // 2: h // 2 + w // 2]
+            if args.width is None:
+                args.width = int(args.height * img.shape[1] / img.shape[0])
+            elif args.height is None:
+                args.height = int(args.width * img.shape[0] / img.shape[1])
+
             img = cv2.resize(
                 img, (args.width, args.height), interpolation=cv2.INTER_CUBIC
             )
             if args.n_segments > 0:
                 img = get_super_pixels(img, args.n_segments)
-            # https: // matplotlib.org/matplotblog/posts/emoji-mosaic-art/
-
             if not args.no_output:
+                with open(f"./setup/{args.system}_chrome_ignore_emoji_list.json") as f:
+                    ignore_emoji_list = json.load(f)
+                with open(f"./setup/choose_list.json") as f:
+                    temp = json.load(f)
+                    if temp:
+                        choose_list = temp
+                    else:
+                        with open("generation/emojis.json") as f:
+                            emojis = json.load(f)
+                            choose_list_with_html = {
+                                emoji["emoji"]: fix_html_emojis(emoji["html"])
+                                for emoji in emojis["emojis"]
+                                if (
+                                    "flag" not in emoji["category"]
+                                    and "geometric" not in emoji["category"]
+                                )
+                            }
+                            choose_list = list(choose_list_with_html.keys())
 
                 emoji_mean_df = pd.read_csv(
-                    "generation/emojis_to_mean.tsv", sep="\t", header=None
+                    f"generation/{args.system}_emojis_to_mean.tsv",
+                    sep="\t",
+                    header=None,
                 )
                 emoji_mean_df = emoji_mean_df[~emoji_mean_df[0].isin(
                     ignore_emoji_list)]
                 emoji_mean_df = emoji_mean_df[emoji_mean_df[0].isin(
                     choose_list)]
-                print(emoji_mean_df.shape)
                 emoji_mean_df[1] = emoji_mean_df[1].apply(eval)
-                # Fix for white
-                tree = KDTree(
-                    np.array(list(emoji_mean_df[1]))-np.array([15, 15, 15]))
+                tree = KDTree(np.array(list(emoji_mean_df[1])))
                 shape = img.shape
                 img = img.reshape(-1, 3)
 
@@ -782,14 +548,21 @@ if __name__ == "__main__":
                 for pixel in tqdm(img):
                     _, index = tree.query(pixel)
                     new = np.append(
-                        new, choose_list_with_html[emoji_mean_df[0].iloc[index]])
+                        new, emoji_mean_df[0].iloc[index]
+                    )
                 new = new.reshape(shape[:-1])
                 output = ""
                 for row in new:
                     output += "".join(row) + new_line_str
-                generate_html_around_str(output)
-                open_html_in_browser_and_save(html_path)
-                # print(output)
+
+                if args.save_path is None:
+                    print(output)
+                else:
+                    if ".html" in args.save_path:
+                        generate_html_around_str(output, args.save_path)
+                    else:
+                        with open(args.save_path, "w") as f:
+                            f.write(output)
             else:
                 plt.imshow(img)
                 plt.show()
@@ -798,23 +571,3 @@ if __name__ == "__main__":
         raise NotImplementedError(
             "Currently only `image` and `text` mode are supported."
         )
-
-        # OLD HSV Alternative
-        # for key in color_to_hsv:
-        #     color_range = color_to_hsv[key]
-        #     mask = cv2.inRange(
-        #         img, np.array(color_range[1]), np.array(
-        #             color_range[0])
-        #     )
-        #     if not args.fill_random:
-        #         if key in color_to_emoji:
-        #             new = np.where(mask, color_to_emoji[key], new)
-        #         else:
-        #             new = np.where(mask, "  ", new)
-        #     else:
-        #         lis = list(color_to_emoji.keys())
-        #         if key in color_to_emoji:
-        #             new = np.where(
-        #                 mask, color_to_emoji[lis[np.random.randint(0, len(lis))]], new)
-        #         else:
-        #             new = np.where(mask, "  ", new)
