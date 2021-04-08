@@ -540,7 +540,7 @@ if __name__ == "__main__":
                 emoji_mean_df = emoji_mean_df[emoji_mean_df[0].isin(
                     choose_list)]
                 emoji_mean_df[1] = emoji_mean_df[1].apply(eval)
-                tree = KDTree(np.array(list(emoji_mean_df[1])))
+                tree = KDTree(np.array(list(emoji_mean_df[1]))-np.array([15,15,15]))
                 shape = img.shape
                 img = img.reshape(-1, 3)
 
