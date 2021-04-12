@@ -34,7 +34,7 @@ def save(path):
 
     a = cv2.imread(path, 0)
     a = np.pad(
-        a[top - 1 : bottom + 1, left - 1 : right + 1],
+        a[top - 1: bottom + 1, left - 1: right + 1],
         (1, 1),
         "constant",
         constant_values=(255),
@@ -105,9 +105,11 @@ def generate_images():
         "🌝",
         "🌚",
         "🍑",
+        "😌"
     ]
     digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    extra_list = list(string.punctuation) + emojis + digits  # add your characters here
+    extra_list = list(string.punctuation) + emojis + \
+        digits  # add your characters here
     ranges += list(map(ord, extra_list))
 
     for i in ranges:
@@ -118,19 +120,23 @@ def generate_images():
         for j in range(len(font_list)):
             img_name = os.path.join(
                 current_path,
-                "../data/" + chr(i) + "/" + font_list[j].split(".")[0] + ".png",
+                "../data/" + chr(i) + "/" +
+                font_list[j].split(".")[0] + ".png",
             )
             if not os.path.exists(img_name):
                 print(chr(i))
                 f = open("generate.html", "w")
                 select_font = "* {font-family: %s}" % ("'" + str(j) + "'")
                 text = (
-                    start_html + font_face + select_font + mid_html + chr(i) + end_html
+                    start_html + font_face + select_font +
+                    mid_html + chr(i) + end_html
                 )
                 f.write(text)
                 f.close()
-                driver = webdriver.Chrome(os.path.join(current_path, "chromedriver"))
-                driver.get("file://" + os.path.join(current_path, "generate.html"))
+                driver = webdriver.Chrome(
+                    os.path.join(current_path, "chromedriver"))
+                driver.get(
+                    "file://" + os.path.join(current_path, "generate.html"))
                 driver.save_screenshot(img_name)
                 img = save(img_name)
                 driver.close()

@@ -157,7 +157,7 @@ scale = {
     "digit": 1,
     "emoji": 0.9,
     "regular_punct": 0.9,
-    "small_punct": 0.6,
+    "small_punct": 0.5,
     "other": 0.9,
 }
 
@@ -363,7 +363,7 @@ if __name__ == "__main__":
             lines = []
             for char in args.input:
                 if char == " ":
-                    lines.append(new_line_str * int(args.height))
+                    lines.append(new_line_str * int(args.height//2))
                     continue
                 img = generate_char(char, args)
 
@@ -373,13 +373,16 @@ if __name__ == "__main__":
                 if not args.no_output:
                     output = ""
                     for row in new:
-                        output += args.align_char + "".join(row) + new_line_str
+                        st = "".join(row)
+                        if st.strip() != "":
+                            output += args.align_char + \
+                                "".join(row).rstrip() + new_line_str
                     lines.append(output)
             if args.save_path is None:
-                print("".join(lines))
+                print("\n".join(lines))
             else:
                 with open(args.save_path, "w") as f:
-                    f.write("".join(lines))
+                    f.write("\n".join(lines))
         else:
             output_arr = None
             for char in args.input:
@@ -540,7 +543,8 @@ if __name__ == "__main__":
                 emoji_mean_df = emoji_mean_df[emoji_mean_df[0].isin(
                     choose_list)]
                 emoji_mean_df[1] = emoji_mean_df[1].apply(eval)
-                tree = KDTree(np.array(list(emoji_mean_df[1]))-np.array([15,15,15]))
+                tree = KDTree(
+                    np.array(list(emoji_mean_df[1]))-np.array([15, 15, 15]))
                 shape = img.shape
                 img = img.reshape(-1, 3)
 
