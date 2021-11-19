@@ -1,8 +1,6 @@
 # Emoji Art Generator
 This is a fun emoji art generator which I created because I was stressed and wanted to relax for a while :P
 
-Please try not to misuse this. 
-
 ## Usage
 The current code supports images and text input. I'm open to new suggestions so please create an issue if needed.
 
